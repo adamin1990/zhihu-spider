@@ -242,7 +242,7 @@ function get_dbh() {
 	static $instances = array();
 	$key = getmypid();
 	if (empty($instances[$key])){
-		$instances[$key] = new Mysql('127.0.0.1', 'root', '123456', 'zhihu');
+		$instances[$key] = new Mysql('127.0.0.1', 'root', 'Yjl&2014', 'zhihu');
 		$instances[$key]->set_char();
 	}
 	return $instances[$key];
