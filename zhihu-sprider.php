@@ -54,19 +54,19 @@ function save_user_index() {
 	if (!empty($username)) {
 		// 更新采集时间, 让队列每次都取到不同的用户
         $dbh->update('people_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('username' => $username));
-        log("采集用户 --- " . $username . " --- 开始");
+        zh_log("采集用户 --- " . $username . " --- 开始");
 
         $followees_user = get_user_index($username, 'followees', $worker);
-        $worker->log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
+        $worker->zh_log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
         // 获取关注者
         $followers_user = get_user_index($username, 'followers', $worker);
-        $worker->log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
+        $worker->zh_log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
 
         // 合并 关注了 和 关注者
         $user_rows = array_merge($followers_user, $followees_user);
 
 	} else {
-		log("采集用户 ---  队列不存在");
+		zh_log("采集用户 ---  队列不存在");
 	}
 }
 
@@ -214,9 +214,9 @@ function get_redis() {
 	return $instances[$key];
 }
 
-function log($msg){
+function zh_log($msg){
 	$msg = "[".date("Y-m-d H:i:s")."] " . $msg . "\n";
 	echo $msg;
 
-    //file_put_contents($this->log_file, $msg, FILE_APPEND | LOCK_EX); }
+    //file_put_contents($this->zh_log_file, $msg, FILE_APPEND | LOCK_EX); }
 }
