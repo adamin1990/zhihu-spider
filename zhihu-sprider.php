@@ -8,6 +8,10 @@
 
 error_reporting(E_ALL);
 
+if (function_exists( 'date_default_timezone_set' )){
+	date_default_timezone_set('UTC');
+}
+
 require 'Http.class.php';
 require 'Mysql.class.php';
 require 'simple_html_dom.php';
