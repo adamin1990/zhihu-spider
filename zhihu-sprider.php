@@ -70,10 +70,10 @@ function save_user_index() {
         zh_log("采集用户 --- " . $username . " --- 开始");
 
         $followees_user = get_user_index($username, 'followees');
-        $worker->zh_log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
+        zh_log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
         // 获取关注者
         $followers_user = get_user_index($username, 'followers');
-        $worker->zh_log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
+        zh_log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
 
         // 合并 关注了 和 关注者
         $user_rows = array_merge($followers_user, $followees_user);
