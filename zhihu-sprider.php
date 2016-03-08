@@ -121,7 +121,7 @@ function get_user_index($username, $user_type = 'followees', $worker = null) {
 	global $http;
 	static $userInfo = array();
 
-    $url = "https://www.zhihu.com/people/{$username}/{$user_type}";
+    echo $url = "https://www.zhihu.com/people/{$username}/{$user_type}";
 
     $http->get($url, function($html) use($http, $userInfo){
     	global $dom;
