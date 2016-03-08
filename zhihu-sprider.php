@@ -10,7 +10,6 @@ require 'Http.class.php';
 require 'Mysql.class.php';
 require 'simple_html_dom.php';
 
-$seeds = array('kaifulee', 'onlyswan');
 
 $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cookie'=>'_za=f23a75a9-a490-4e94-bb53-d003b11b6004; q_c1=a95f5f370a004436b21d89cc36fc86e0|1456383631000|1451034729000; _xsrf=4eeacaa9ec8543ca5971c30f3463df6f; udid="AHCALJ0alQmPTjFOTkywYScCwUkdoDeUeW0="; cap_id="MWQ5YWUwZmI2ZWVhNDc5M2E2Y2MzZDBjZjdlMzlhMGM=|1457406822|8d27f8fb463822bc8642eec7b814b3523994104f"; z_c0="QUFBQUIyRVpBQUFYQUFBQVlRSlZUYUhSQlZjeUxtWVRsd3d2bHRsVXRUWWRBY1E5NHZWMnFBPT0=|1457407137|4532ebcd93d7218269fab4455c1b47ddb15a5605"; n_c=1; __utmt=1; __utma=51854390.2026705993.1457407273.1457417444.1457420375.4; __utmb=51854390.2.10.1457420375; __utmc=51854390; __utmz=51854390.1457420375.4.4.utmcsr=zhihu.com|utmccn=(referral)|utmcmd=referral|utmcct=/people/onlyswan/followers; __utmv=51854390.100-1|2=registration_date=20120529=1^3=entry_date=20120529=1')));
 
@@ -21,12 +20,97 @@ $dbh->set_char();
 
 $dom = new simple_html_dom();
 
+//配置
+// 入口种子用户
+$seeds = array('kaifulee', 'onlyswan');
+
+$process_count = 8;
+
+// 开启8个进程
+for ($i = 1; $i <= $process_count; $i++) {
+	$pid = pcntl_fork();
+	if ($pid == -1) {
+		echo "Could not fork!\n";
+		exit(1);
+	}
+	if (!$pid) {
+		$_pid = getmypid();
+		echo "child process $_pid running\n";
+
+		for ($j = 0; $j < 10000; $j++) {
+		    save_user_index();
+		}
+
+		exit($_pid);
+	 }
+}
+
+function save_user_index() {
+	$username = get_user_queue();
+	$progress_id = posix_getpid();
+
+	$time = time();
+
+	if (!empty($username)) {
+		// 更新采集时间, 让队列每次都取到不同的用户
+        $dbh->update('people_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('username' => $username);
+        log("采集用户 --- " . $username . " --- 开始");
+
+        $followees_user = get_user_index($username, 'followees', $worker);
+        $worker->log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
+        // 获取关注者
+        $followers_user = get_user_index($username, 'followers', $worker);
+        $worker->log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
+
+        // 合并 关注了 和 关注者
+        $user_rows = array_merge($followers_user, $followees_user);
+
+	} else {
+		log("采集用户 ---  队列不存在");
+	}
+}
+
+function get_user_queue($key = 'index', $count = 10000){
+	global $dbh;
+	global $seeds;
+
+	$redis = get_redis();
+
+	$redis_key = 'zhihu_user_queue';
+
+    // 如果队列为空, 从数据库取一些
+    if (!$redis->lsize($redis_key)) {
+        $sql = "Select `username`, `index_uptime` From `people_index` Order By `index_uptime` Asc Limit {$count}";
+        $result = $dbh->query($sql);
+        $rows = $dbh->fetch_array($result);
+        if(!$rows) {
+        	$rows = array();
+
+        	foreach ($seeds as $index => $value) {
+        		$rows[$index] = array(
+        			'username' => $value
+        		);
+
+        		$dbh->save('people_index', $rows[$index], array('username' => $value);
+        	}
+        }
+        foreach ($rows as $row) {
+            //echo $row['username'] . " --- " . date("Y-m-d H:i:s", $row[$key.'_uptime']) . "\n";
+            $redis->lpush($redis_key, $row['username']);
+        }
+    }
+    // 从队列中取出一条数据
+    return $redis->lpop($redis_key);
+}
+
+
 function get_user_index($username, $user_type = 'followees', $worker = null) {
 	global $http;
+	static $userInfo = array();
 
     $url = "https://www.zhihu.com/people/{$username}/{$user_type}";
 
-    $http->get($url, function($html) use($http){
+    $http->get($url, function($html) use($http, $userInfo){
     	global $dom;
 
     	$html = $dom->load($html);
@@ -56,8 +140,6 @@ function get_user_index($username, $user_type = 'followees', $worker = null) {
     	}
     });
 }
-
-get_user_index('liuhongissocool', 'followers');
 
 
 
@@ -116,4 +198,25 @@ function saveUserInfo($data) {
     $dbh->save('people', $data, array('username'=>$data['username']));
 
     echo "{$data['username']} success...\n";
+}
+
+
+
+
+// util
+function get_redis() {
+	static $instances = array();
+	$key = getmypid();
+	if (empty($instances[$key])){
+		$instances[$key] = new Redis();
+		$instances[$key]->connect('127.0.0.1', '6379');
+	}
+	return $instances[$key];
+}
+
+function log($msg){
+	$msg = "[".date("Y-m-d H:i:s")."] " . $msg . "\n";
+	echo $msg;
+
+    //file_put_contents($this->log_file, $msg, FILE_APPEND | LOCK_EX); }
 }
