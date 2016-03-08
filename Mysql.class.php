@@ -341,7 +341,7 @@ class Mysql{
         while ( $row = $this->fetch_array($result, $type) ){
             $rows[] = $row;
         }
-        mysqli_free_result($result);
+        mysql_free_result($result);
       
         return empty($rows) ? false : $rows;
     }
