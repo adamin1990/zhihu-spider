@@ -132,6 +132,10 @@ function get_user_index($username, $user_type = 'followees', $worker = null) {
 
     	$followers_list = $html->find('.zh-general-list', 0);
 
+    	if(!$followers_list){
+    		return;
+    	}
+
     	$ajax_params = $followers_list->getAttribute('data-init');
 
     	$ajax_params = empty($ajax_params) ? '' : json_decode(html_entity_decode($ajax_params), true);
