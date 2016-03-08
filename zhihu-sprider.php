@@ -95,7 +95,7 @@ function get_user_queue($key = 'index', $count = 10000){
     if (!$redis->lsize($redis_key)) {
         $sql = "Select `username`, `index_uptime` From `people_index` Order By `index_uptime` Asc Limit {$count}";
         $result = $dbh->query($sql);
-        $rows = $dbh->fetch_array($result);
+        $rows = $dbh->fetch_all($result);
         if(!$rows) {
         	$rows = array();
 

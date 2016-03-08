@@ -336,6 +336,15 @@ class Mysql{
 		$_result = empty($result) ? $this->result : $result;
 		return mysql_fetch_row($_result);
 	}
+
+	public function fetch_all($result, $type = MYSQLI_ASSOC){
+        while ( $row = $this->fetch_array($result, $type) ){
+            $rows[] = $row;
+        }
+        mysqli_free_result($result);
+      
+        return empty($rows) ? false : $rows;
+    }
 	
 	/**
 	 * 取得结果集中行的数目
