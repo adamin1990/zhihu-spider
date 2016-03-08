@@ -63,6 +63,7 @@ function save_user_index() {
 	$time = time();
 
 	if (!empty($username)) {
+		$username = addslashes($username);
 		// 更新采集时间, 让队列每次都取到不同的用户
         $dbh->update('people_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('username' => $username));
         zh_log("采集用户 --- " . $username . " --- 开始");
@@ -191,8 +192,8 @@ function get_user_info($url, $data, $offset = 0){
 	        $username = substr($href, strrpos($href, '/') + 1);
 
 	        $userInfo[$username] = array(
-	        	'username' => $username,
-	        	'nickname' => $nickname
+	        	'username' => addslashes($username),
+	        	'nickname' => addslashes($nickname)
 	        );
 
 	        saveUserInfo($userInfo[$username]);
