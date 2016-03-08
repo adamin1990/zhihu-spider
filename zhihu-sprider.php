@@ -69,8 +69,8 @@ function save_user_index() {
         $dbh->update('people_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('username' => $username));
         zh_log("采集用户 --- " . $username . " --- 开始");
 
-        $followees_user = get_user_index($username, 'followees');
-        zh_log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
+        //$followees_user = get_user_index($username, 'followees');
+        //zh_log("采集用户列表 --- " . $username . " --- 关注了 --- 成功");
         // 获取关注者
         $followers_user = get_user_index($username, 'followers');
         zh_log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
