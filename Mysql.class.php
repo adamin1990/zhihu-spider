@@ -237,6 +237,8 @@ class Mysql{
 		} else {
 			$this->insert($table, $data);
 		}
+
+		mysql_free_result($this->result);
 	}
 	
 	
