@@ -108,7 +108,7 @@ function get_user_queue($key = 'index', $count = 10000){
         	}
         }
         foreach ($rows as $row) {
-            echo $row['username'] . " --- " . date("Y-m-d H:i:s", $row['index_uptime']) . "\n";
+            //echo $row['username'] . " --- " . date("Y-m-d H:i:s", $row['index_uptime']) . "\n";
             $redis->lpush($redis_key, $row['username']);
         }
     }
