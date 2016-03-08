@@ -76,7 +76,7 @@ function save_user_index() {
         zh_log("采集用户列表 --- " . $username . " --- 关注者 --- 成功");
 
         // 合并 关注了 和 关注者
-        $user_rows = array_merge($followers_user, $followees_user);
+        //$user_rows = array_merge($followers_user, $followees_user);
 
 	} else {
 		zh_log("采集用户 ---  队列不存在");
