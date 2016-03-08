@@ -126,6 +126,8 @@ function get_user_index($username, $user_type = 'followees', $worker = null) {
     $http->get($url, function($html) use($http, $userInfo){
     	global $dom;
 
+    	file_put_contents('people', $html);
+
     	$html = $dom->load($html);
 
     	$followers_list = $html->find('.zh-general-list', 0);
