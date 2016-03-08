@@ -53,7 +53,7 @@ function save_user_index() {
 
 	if (!empty($username)) {
 		// 更新采集时间, 让队列每次都取到不同的用户
-        $dbh->update('people_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('username' => $username);
+        $dbh->update('people_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('username' => $username));
         log("采集用户 --- " . $username . " --- 开始");
 
         $followees_user = get_user_index($username, 'followees', $worker);
