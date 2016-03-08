@@ -298,7 +298,7 @@ class Mysql{
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public function fetch_array($result, $type){
+	public function fetch_array($result, $type = MYSQL_BOTH){
 		$_result = empty($result) ? $this->result : $result;
 		return mysql_fetch_array($_result, $type);
 	}
