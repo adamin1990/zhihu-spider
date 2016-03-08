@@ -6,6 +6,8 @@
  * @version $Id$
  */
 
+error_reporting(E_ALL);
+
 require 'Http.class.php';
 require 'Mysql.class.php';
 require 'simple_html_dom.php';
@@ -45,7 +47,14 @@ for ($i = 1; $i <= $process_count; $i++) {
 	 }
 }
 
+while (pcntl_waitpid(0, $status) != -1) {
+    $status = pcntl_wexitstatus($status);
+    echo "Child $status completed\n";
+}
+
 function save_user_index() {
+	global $dbh;
+	
 	$username = get_user_queue();
 	$progress_id = posix_getpid();
 
