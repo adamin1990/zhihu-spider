@@ -91,7 +91,7 @@ function get_user_queue($key = 'index', $count = 10000){
         			'username' => $value
         		);
 
-        		$dbh->save('people_index', $rows[$index], array('username' => $value);
+        		$dbh->save('people_index', $rows[$index], array('username' => $value));
         	}
         }
         foreach ($rows as $row) {
