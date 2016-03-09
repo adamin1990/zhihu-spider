@@ -21,8 +21,20 @@ $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cook
 
 $dom = new simple_html_dom();
 
-if(file_exists('lock')) {
-	return;
+$lock_name = 'lock';
+
+
+$time = time();
+
+
+if(file_exists($lock_name)) {
+	$currentmodif = filemtime($lock_name);
+
+	if(($time - $currentmodif) > 600) {
+		unlink($lock_name);
+	} else {
+		return;
+	}
 }
 
 file_put_contents('lock', '1');
@@ -134,8 +146,6 @@ function get_user_index($username, $user_type = 'followees', $worker = null) {
     $http->get($url, function($html) use($http, $userInfo){
     	global $dom;
 
-    	file_put_contents('people', $html);
-
     	$html = $dom->load($html);
 
     	$followers_list = $html->find('.zh-general-list', 0);
@@ -190,6 +200,8 @@ function get_user_info($url, $data, $offset = 0){
 		if($user_count == 0) {
 			return false;
 		}
+
+		file_put_contents('lock', '1');
 
 		foreach ($msg as $key => $value) {
 	        $html = $dom->load($value);
