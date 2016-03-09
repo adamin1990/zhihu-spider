@@ -21,6 +21,10 @@ $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cook
 
 $dom = new simple_html_dom();
 
+if(file_exists('lock')) {
+	return;
+}
+
 file_put_contents('lock', '1');
 
 //配置
