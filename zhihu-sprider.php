@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 /**
  * 知乎 爬虫
@@ -16,13 +17,11 @@ require 'Http.class.php';
 require 'Mysql.class.php';
 require 'simple_html_dom.php';
 
-
 $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cookie'=>'_za=3df44f09-34c8-4bd3-8a2b-51f997c1172d; q_c1=74572bdd061d48e5969f57957fa5547b|1456499201000|1451822765000; cap_id="YjRjNjVhNGVjZmM3NDRlODk4ZGVlOTVkZWE2ZmQ0MTQ=|1457356082|5b282e36505a7f76e0c4e9043465ab6aabd4df13"; udid="ADAAHPRflAmPTsGxlcoZ8ZAV5g5bbcIsXTQ="; z_c0="QUFBQUIyRVpBQUFYQUFBQVlRSlZUVHNLQlZmQzFIZDFxWnY4LWJNMEllMmVCNGc4akdkeldnPT0=|1457356091|f44076fe965749f9a284c4e33016b721a68e7e8b"; _xsrf=208a2d65ff8f5110357dc88fe9f8e761; __utmt=1; __utma=51854390.160545789.1457356365.1457445285.1457455662.5; __utmb=51854390.2.10.1457455662; __utmc=51854390; __utmz=51854390.1457445285.4.5.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmv=51854390.100-1|2=registration_date=20120529=1^3=entry_date=20120529=1')));
 
-
-
-
 $dom = new simple_html_dom();
+
+file_put_contents('lock', '1');
 
 //配置
 // 入口种子用户
@@ -32,26 +31,32 @@ $process_count = 8;
 
 // 开启8个进程
 for ($i = 1; $i <= $process_count; $i++) {
-	$pid = pcntl_fork();
-	if ($pid == -1) {
-		echo "Could not fork!\n";
-		exit(1);
-	}
-	if (!$pid) {
-		$_pid = getmypid();
-		echo "child process $_pid running\n";
-
-		for ($j = 0; $j < 10000; $j++) {
-		    save_user_index();
+	try {
+		$pid = pcntl_fork();
+		if ($pid == -1) {
+			echo "Could not fork!\n";
+			exit(1);
 		}
+		if (!$pid) {
+			$_pid = getmypid();
+			echo "child process $_pid running\n";
 
-		exit($_pid);
-	 }
+			for ($j = 0; $j < 10000; $j++) {
+			    save_user_index();
+			}
+
+			exit($_pid);
+		}
+	} catch(Exception $e) {
+		unlink('lock');
+	}
 }
 
 while (pcntl_waitpid(0, $status) != -1) {
     $status = pcntl_wexitstatus($status);
     echo "Child $status completed\n";
+
+    unlink('lock');
 }
 
 function save_user_index() {
@@ -248,3 +253,5 @@ function get_dbh() {
 	}
 	return $instances[$key];
 }
+
+unlink('lock');
