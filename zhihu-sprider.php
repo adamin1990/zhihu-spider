@@ -31,7 +31,9 @@ if(file_exists($lock_name)) {
 	$currentmodif = filemtime($lock_name);
 
 	if(($time - $currentmodif) > 600) {
-		unlink($lock_name);
+		if(file_exists('lock')){
+			unlink($lock_name);
+		}
 	} else {
 		return;
 	}
@@ -64,7 +66,9 @@ for ($i = 1; $i <= $process_count; $i++) {
 			exit($_pid);
 		}
 	} catch(Exception $e) {
-		unlink('lock');
+		if(file_exists('lock')){
+			unlink($lock_name);
+		}
 	}
 }
 
@@ -72,7 +76,9 @@ while (pcntl_waitpid(0, $status) != -1) {
     $status = pcntl_wexitstatus($status);
     echo "Child $status completed\n";
 
-    unlink('lock');
+    if(file_exists('lock')){
+		unlink($lock_name);
+	}
 }
 
 function save_user_index() {
@@ -270,4 +276,6 @@ function get_dbh() {
 	return $instances[$key];
 }
 
-unlink('lock');
+if(file_exists('lock')){
+	unlink($lock_name);
+}
