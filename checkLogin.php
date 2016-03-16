@@ -49,12 +49,12 @@ function checkLogin() {
 					$cookies[$cookie[0]] = $cookie[1];
 				}
 
-				$cookies_str = '';
+				$cookies_array = array();
 				foreach ($cookies as $key => $value) {
-					$cookies_str .= $key.'='.$value;
+					$cookies_array[]= $key.'='.$value;
 				}
 
-				file_put_contents('login_cookie', $cookies_str);
+				file_put_contents('login_cookie', join(';', $cookies_array));
 			});
 		}
 	});
@@ -68,3 +68,5 @@ function getLoginCookie() {
 
 	return $login_cookie;
 }
+
+checkLogin();
