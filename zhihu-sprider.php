@@ -13,11 +13,12 @@ if (function_exists( 'date_default_timezone_set' )){
 	date_default_timezone_set('UTC');
 }
 
-require 'Http.class.php';
-require 'Mysql.class.php';
-require 'simple_html_dom.php';
+require_once 'Http.class.php';
+require_once 'Mysql.class.php';
+require_once 'simple_html_dom.php';
+require_once 'checkLogin.php';
 
-$http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cookie'=>'_za=3df44f09-34c8-4bd3-8a2b-51f997c1172d; q_c1=74572bdd061d48e5969f57957fa5547b|1456499201000|1451822765000; cap_id="YjRjNjVhNGVjZmM3NDRlODk4ZGVlOTVkZWE2ZmQ0MTQ=|1457356082|5b282e36505a7f76e0c4e9043465ab6aabd4df13"; udid="ADAAHPRflAmPTsGxlcoZ8ZAV5g5bbcIsXTQ="; z_c0="QUFBQUIyRVpBQUFYQUFBQVlRSlZUVHNLQlZmQzFIZDFxWnY4LWJNMEllMmVCNGc4akdkeldnPT0=|1457356091|f44076fe965749f9a284c4e33016b721a68e7e8b"; _xsrf=208a2d65ff8f5110357dc88fe9f8e761; __utmt=1; __utma=51854390.160545789.1457356365.1457445285.1457455662.5; __utmb=51854390.2.10.1457455662; __utmc=51854390; __utmz=51854390.1457445285.4.5.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmv=51854390.100-1|2=registration_date=20120529=1^3=entry_date=20120529=1')));
+$http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cookie'=>getLoginCookie())));
 
 $dom = new simple_html_dom();
 
