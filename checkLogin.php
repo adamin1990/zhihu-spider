@@ -21,11 +21,20 @@ function checkLogin() {
 	$dom = new simple_html_dom();
 
 
-	$http->get(function($html) use($http, $dom){
-		$ele = $dom->load($html);
+	$http->get(function($response_body, $response_headers, $http) use($dom){
+		$html = $dom->load($response_body);
 
-		$login_flag = $ele->find('.sign-button', 0);
-		$_xsrf = $ele->find('input[name="_xsrf"]', 0)->value;
+		$login_flag = $html->find('.sign-button', 0);
+		$_xsrf = $html->find('input[name="_xsrf"]', 0)->value;
+
+		$set_cookie = $response_headers['set_cookie'];
+
+		$cookies = array();
+		foreach ($set_cookie as  $cookie) {
+			$cookie = explode(';', $cookie);
+			$cookie = explode('=', $cookie[0]);
+			$cookies[$cookie[0]] = $cookie[1];
+		}
 
 		if($login_flag) {
 			// 需要登录
@@ -35,8 +44,21 @@ function checkLogin() {
 				'remember_me' => 'true',
 				'_xsrf' => $_xsrf
 			);
-			$http->post('https://www.zhihu.com/login/email', $data, function($response_body, $response_headers){
-				print_r($response_headers);
+			$http->post('https://www.zhihu.com/login/email', $data, function($response_body, $response_headers, $http) use(&$cookies){
+				$set_cookie = $response_headers['set_cookie'];
+
+				foreach ($set_cookie as  $cookie) {
+					$cookie = explode(';', $cookie);
+					$cookie = explode('=', $cookie[0]);
+					$cookies[$cookie[0]] = $cookie[1];
+				}
+
+				$cookies_str = '';
+				foreach ($cookies as $key => $value) {
+					$cookies_str .= $key.'='.$value;
+				}
+
+				file_put_contents('login_cookie', $cookies_str);
 			});
 		}
 	});

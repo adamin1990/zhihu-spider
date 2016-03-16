@@ -167,7 +167,7 @@ class Http {
 	    $this->request($url);
 	    
 	    if(is_object($callback)) {
-			$callback($this->response_body);
+			$callback($this->response_body, $this->response_headers, $this);
 		}
 
 		return $this;
@@ -352,7 +352,7 @@ class Http {
 	            	if(is_array($header_assoc [$k])) {
 	            		array_push($header_assoc [$k], $v);
 	            	} else {
-	            		$header_assoc [$k] = array($v);
+	            		$header_assoc [$k] = array($header_assoc [$k]);
 	            	}
 	            } else {
 	            	$header_assoc [$k] = $v;
