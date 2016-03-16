@@ -341,6 +341,8 @@ class Http {
 	        $this->response_headers = explode("\r\n", $this->response_headers);
 	        array_shift($this->response_headers);
 	        // Loop through and split up the headers.
+	        print_r($this->response_headers);
+	        
 	        $header_assoc = array();
 	        foreach ($this->response_headers as $header) {
 	            $kv = explode(': ', $header);
@@ -353,6 +355,7 @@ class Http {
 	            		array_push($header_assoc [$k], $v);
 	            	} else {
 	            		$header_assoc [$k] = array($header_assoc [$k]);
+	            		array_push($header_assoc [$k], $v);
 	            	}
 	            } else {
 	            	$header_assoc [$k] = $v;
