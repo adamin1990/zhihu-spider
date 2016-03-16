@@ -190,7 +190,7 @@ class Http {
 	    $this->request($url);
 	    
 	    if(is_object($callback)) {
-			$callback($this->response_body);
+			$callback($this->response_body, $this->response_headers, $this);
 		}
 
 		return $this;
