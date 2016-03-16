@@ -344,8 +344,19 @@ class Http {
 	        $header_assoc = array();
 	        foreach ($this->response_headers as $header) {
 	            $kv = explode(': ', $header);
-	            //$header_assoc [strtolower ( $kv [0] )] = $kv [1];
-	            $header_assoc [$kv [0]] = $kv [1];
+	            $k = explode('-', strtolower ( $kv [0] ));
+	            $k = implode('_', $k);
+	            $v = trim($kv [1]);
+	            
+	            if(isset($header_assoc [$k])) {
+	            	if(is_array($header_assoc [$k])) {
+	            		array_push($header_assoc [$k], $v);
+	            	} else {
+	            		$header_assoc [$k] = array($v);
+	            	}
+	            } else {
+	            	$header_assoc [$k] = $v;
+	            }
 	        }
 	        // Reset the headers to the appropriate property.
 	        $this->response_headers = $header_assoc;
