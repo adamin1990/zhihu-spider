@@ -45,8 +45,10 @@ for ($i = 1; $i <= $process_count; $i++) {
 			echo "child process $_pid running\n";
 
 			for ($j = 0; $j < 10000; $j++) {
-			    crawl_people();
+			    
 			}
+
+			crawl_people();
 
 			exit($_pid);
 		}
