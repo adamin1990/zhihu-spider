@@ -51,19 +51,13 @@ for ($i = 1; $i <= $process_count; $i++) {
 			exit($_pid);
 		}
 	} catch(Exception $e) {
-		if(file_exists('lock')){
-			unlink($lock_name);
-		}
+		
 	}
 }
 
 while (pcntl_waitpid(0, $status) != -1) {
     $status = pcntl_wexitstatus($status);
     echo "Child $status completed\n";
-
-    if(file_exists('lock')){
-		unlink($lock_name);
-	}
 }
 
 
