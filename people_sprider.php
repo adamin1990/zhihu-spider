@@ -28,9 +28,6 @@ $dom = new simple_html_dom();
 
 $time = time();
 
-$kw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-$kw = str_split($kw);
-
 // 进程数
 $process_count = 8;
 
@@ -122,10 +119,22 @@ function saveUserInfo($data) {
 }
 
 function get_people_keyword () {
-	global $kw;
+	$kw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$kw = str_split($kw);
 
-	return array_pop($kw);
-}
+	$redis = get_redis();
+
+	$redis_key = 'zhihu_people_keyword';
+
+    // 如果队列为空, 从数据库取一些
+    if (!$redis->lsize($redis_key)) {
+        foreach ($kw as $row) {
+            //echo $row['username'] . " --- " . date("Y-m-d H:i:s", $row['index_uptime']) . "\n";
+            $redis->lpush($redis_key, $row);
+        }
+    }
+    // 从队列中取出一条数据
+    return $redis->lpop($redis_key);
 
 // util
 function get_redis() {
