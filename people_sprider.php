@@ -118,7 +118,7 @@ function saveUserInfo($data) {
 }
 
 function get_people_keyword () {
-	$kw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$kw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 	$kw = str_split($kw);
 
 	$redis = get_redis();
