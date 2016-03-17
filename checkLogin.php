@@ -23,6 +23,10 @@ function checkLogin() {
 		$login_flag = $html->find('.sign-button', 0);
 		$_xsrf = $html->find('input[name="_xsrf"]', 0)->value;
 
+		if(empty($response_headers['set_cookie'])) {
+			return;
+		}
+
 		$set_cookie = $response_headers['set_cookie'];
 
 		$cookies = array();
