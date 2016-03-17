@@ -20,8 +20,6 @@ require_once 'Mysql.class.php';
 require_once 'simple_html_dom.php';
 require_once 'checkLogin.php';
 
-checkLogin();
-
 $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cookie'=>getLoginCookie())));
 
 $dom = new simple_html_dom();
