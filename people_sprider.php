@@ -26,6 +26,9 @@ $dom = new simple_html_dom();
 
 $time = time();
 
+$kw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$kw = str_split($kw);
+
 // 进程数
 $process_count = 8;
 
@@ -127,10 +130,6 @@ function saveUserInfo($data) {
 
     echo "{$data['username']} success...\n";
 }
-
-
-$kw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-$kw = str_split($kw);
 
 function get_people_keyword () {
 	global $kw;
