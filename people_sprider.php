@@ -135,6 +135,7 @@ function get_people_keyword () {
     }
     // 从队列中取出一条数据
     return $redis->lpop($redis_key);
+}
 
 // util
 function get_redis() {
