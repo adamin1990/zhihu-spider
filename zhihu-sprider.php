@@ -24,7 +24,6 @@ $dom = new simple_html_dom();
 
 $lock_name = 'lock';
 
-
 $time = time();
 
 

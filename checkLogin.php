@@ -68,5 +68,3 @@ function getLoginCookie() {
 
 	return $login_cookie;
 }
-
-checkLogin();
