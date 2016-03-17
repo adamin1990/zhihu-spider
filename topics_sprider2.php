@@ -101,28 +101,38 @@ function crawl_topic($tid) {
 
 		$html = $dom->load($body);
 
-		$parent_topic = $html->find('.parent-topic div', 0)->children();
+		$parent_topic = $html->find('.parent-topic div', 0);
 
-		$child_topic = $html->find('.child-topic div', 0)->children();
+		$child_topic = $html->find('.child-topic div', 0);
 		
-		foreach ($parent_topic as $key => $value) {
-			$tid = $value->getAttribute('data-token');
-			$name = trim($value->text());
+		if($parent_topic){
+			$parent_topic_c = $parent_topic->children();
+			if($parent_topic_c){
+				foreach ($parent_topic_c as $key => $value) {
+					$tid = $value->getAttribute('data-token');
+					$name = trim($value->text());
 
-			$topics[] = array(
-				'id' => addslashes($tid),
-	        	'name' => addslashes($name)
-			);
+					$topics[] = array(
+						'id' => addslashes($tid),
+			        	'name' => addslashes($name)
+					);
+				}
+			}
 		}
 
-		foreach ($child_topic as $key => $value) {
-			$tid = $value->getAttribute('data-token');
-			$name = trim($value->text());
+		if($child_topic){
+			$child_topic_c = $child_topic->children();
+			if($child_topic_c){
+				foreach ($child_topic_c as $key => $value) {
+					$tid = $value->getAttribute('data-token');
+					$name = trim($value->text());
 
-			$topics[] = array(
-				'id' => addslashes($tid),
-	        	'name' => addslashes($name)
-			);
+					$topics[] = array(
+						'id' => addslashes($tid),
+			        	'name' => addslashes($name)
+					);
+				}
+			}
 		}
 
 		foreach ($topics as $key => $value) {
