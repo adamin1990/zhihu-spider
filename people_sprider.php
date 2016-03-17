@@ -74,15 +74,9 @@ function crawl_people_sug($keyword, $offset = 0){
 	static $userInfo = array();
 	static $userCount = 0;
 
-	$data = array(
-		'q' => $keyword,
-		'type' => 'people',
-		'offset' => $offset
-	);
+	$url = 'https://www.zhihu.com/r/search?q='.$keyword.'&type=people&offset='.$offset;
 
-	$url = 'https://www.zhihu.com/r/search';
-
-	$http->get($url, $data, function($response_body, $response_headers, $http) use (&$userInfo, &$userCount, $keyword, $offset){
+	$http->get($url, function($response_body, $response_headers, $http) use (&$userInfo, &$userCount, $keyword, $offset){
 		global $dom;
 
 		$json = json_decode($response_body, true);
