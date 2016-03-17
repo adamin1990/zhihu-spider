@@ -33,6 +33,7 @@ $process_count = 8;
 
 // 开启8个进程
 for ($i = 1; $i <= $process_count; $i++) {
+	echo $i . "\n";
 	try {
 		$pid = pcntl_fork();
 		if ($pid == -1) {
