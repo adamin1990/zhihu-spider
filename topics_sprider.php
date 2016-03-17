@@ -22,6 +22,7 @@ $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cook
 
 $dom = new simple_html_dom();
 
+crawl_topic();
 
 function crawl_topic() {
 	global $http;
@@ -39,13 +40,13 @@ function crawl_topic() {
     		return;
     	}
 
-    	$data_init = $followers_list->getAttribute('data-init');
+    	$data_init = $topics_list->getAttribute('data-init');
     	$_xsrf = $html->find('input[name="_xsrf"]', 0)->value;
 
     	$data_init = empty($data_init) ? '' : json_decode(html_entity_decode($data_init), true);
 
     	if (!empty($_xsrf) && !empty($data_init) && is_array($data_init)) {
-    		$url = "http://www.zhihu.com/node/" . $data_init['nodename'];
+    		$url = "https://www.zhihu.com/node/" . $data_init['nodename'];
     		$params = $data_init['params'];
 
     		get_topic_info($url, $_xsrf, 0, $params);
@@ -55,19 +56,22 @@ function crawl_topic() {
 }
 
 function get_topic_info($url, $_xsrf, $offset, $params) {
+	global $http;
 
 	$params['offset'] = $offset;
 
 	$data = array(
 		'method' => 'next',
-		'params' => $params,
+		'params' => json_encode($params),
 		'_xsrf' => $_xsrf
 	);
 
-	$http->post($url, $data, function($body, $headers, $http){
+	$http->post($url, $data, function($body, $headers, $http) use($url, $_xsrf, $offset, $params){
 		global $dom;
 
-		$json = json_decode($result, true);
+
+		$json = json_decode($body, true);
+
 		$msg = $json['msg'];
 
 		$topic_count = count($msg);
@@ -92,6 +96,9 @@ function get_topic_info($url, $_xsrf, $offset, $params) {
 
 	        save_topic_info($topic_info);
 	    }
+
+	    get_topic_info($url, $_xsrf, $offset+20, $params);
+
 	});
 }
 
