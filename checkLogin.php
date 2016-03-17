@@ -28,8 +28,8 @@ function checkLogin() {
 		$cookies = array();
 		foreach ($set_cookie as  $cookie) {
 			$cookie = explode(';', $cookie);
-			$cookie = explode('=', $cookie[0]);
-			$cookies[$cookie[0]] = $cookie[1];
+			$cookie = $cookie[0];
+			$cookies[] = $cookie;
 		}
 
 		if($login_flag) {
@@ -45,13 +45,13 @@ function checkLogin() {
 
 				foreach ($set_cookie as  $cookie) {
 					$cookie = explode(';', $cookie);
-					$cookie = explode('=', $cookie[0]);
-					$cookies[$cookie[0]] = $cookie[1];
+					$cookie = $cookie[0];
+					$cookies[] = $cookie;
 				}
 
 				$cookies_array = array();
-				foreach ($cookies as $key => $value) {
-					$cookies_array[]= $key.'='.$value;
+				foreach ($cookies as $value) {
+					$cookies_array[]= $value;
 				}
 
 				file_put_contents('login_cookie', join(';', $cookies_array));
