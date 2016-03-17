@@ -39,7 +39,7 @@ if(file_exists($lock_name)) {
 	}
 }
 
-checkLogin();
+//checkLogin();
 
 file_put_contents('lock', '1');
 
