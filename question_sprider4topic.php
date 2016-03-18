@@ -105,12 +105,12 @@ function get_question_queue($count = 10000) {
     return $redis->lpop($redis_key);
 }
 
-function crawl_question ($tid) {
+function crawl_question ($tid, $page = 0) {
 	global $http;
     
-    $url = 'https://www.zhihu.com/topic/'.$tid .'/questions';
+    $url = 'https://www.zhihu.com/topic/'.$tid .'/questions?page='$page;
 
-    $http->get($url, function($body, $headers, $http) {
+    $http->get($url, function($body, $headers, $http) use($tid, $page) {
         global $dom;
 
         $questions = array();
@@ -118,6 +118,10 @@ function crawl_question ($tid) {
         $html = $dom->load($body);
 
         $questions_list = $html->find('#zh-topic-questions-list', 0);
+
+        if(!$questions_list || count($questions_list) == 0) {
+            return;
+        }
 
         if($questions_list) {
         	$questions_child = $questions_list->children();
@@ -136,10 +140,11 @@ function crawl_question ($tid) {
         	}
         }
 
-
-        foreach ($questions_list as $value) {
+        foreach ($questions as $value) {
             save_question_index($value);
         }
+
+        crawl_question($tid, $page + 1);
     });
 }
 
