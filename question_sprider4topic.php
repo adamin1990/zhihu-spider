@@ -157,7 +157,7 @@ function save_question_index($data) {
 		
 	} else {
 		$data['ctime'] = time();
-		$this->insert('question_index', $data);
+		$dbh->insert('question_index', $data);
 
 		echo "{$data['id']} success...\n";
 	}
