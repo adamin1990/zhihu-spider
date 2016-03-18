@@ -77,7 +77,8 @@ function get_topic_queue($count = 10000){
 
     // 如果队列为空, 从数据库取一些
     if (!$redis->lsize($redis_key)) {
-        $sql = "Select `id`, `index_uptime` From `topic_index` Order By `index_uptime` Asc Limit {$count}";
+        //$sql = "Select `id`, `index_uptime` From `topic_index` Order By `index_uptime` Asc Limit {$count}";
+        $sql = "Select `id`, `index_uptime` From `topic_index` WHERE  `index_uptime`=0  Limit {$count}";
         $result = $dbh->query($sql);
         $rows = $dbh->fetch_all($result);
 
