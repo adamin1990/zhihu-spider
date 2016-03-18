@@ -39,7 +39,7 @@ function worker () {
                 echo "child process $_pid running\n";
 
                 while(true) {
-                    sprider_topic();
+                    sprider_question();
                 }
 
                 exit($_pid);
