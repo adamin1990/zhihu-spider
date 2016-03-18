@@ -76,7 +76,7 @@ function sprider_question() {
     crawl_question($tid);
 }
 
-function get_question_queue() {
+function get_question_queue($count = 10000) {
 	$dbh = get_dbh();
     $redis = get_redis();
 
