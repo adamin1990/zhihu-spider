@@ -82,6 +82,12 @@ function get_topic_queue($count = 10000){
         $result = $dbh->query($sql);
         $rows = $dbh->fetch_all($result);
 
+        if(!$rows) {
+        	$sql = "Select `id`, `index_uptime` From `topic_index` Order By `index_uptime` Asc Limit {$count}";
+	        $result = $dbh->query($sql);
+	        $rows = $dbh->fetch_all($result);
+        }
+
         foreach ($rows as $row) {
             $redis->lpush($redis_key, $row['id']);
         }
