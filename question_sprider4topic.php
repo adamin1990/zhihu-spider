@@ -154,7 +154,7 @@ function save_question_index($data) {
     $dbh->query($sql);
 
     if(($dbh->num_results()) > 0){
-		
+		echo "{$data['id']} fail...";
 	} else {
 		$data['ctime'] = time();
 		$dbh->insert('question_index', $data);
