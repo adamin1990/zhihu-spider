@@ -105,7 +105,7 @@ function get_question_queue($count = 10000) {
     return $redis->lpop($redis_key);
 }
 
-function crawl_question ($tid, $page = 0) {
+function crawl_question ($tid, $page = 1) {
 	global $http;
     
     $url = 'https://www.zhihu.com/topic/'.$tid .'/questions?page='.$page;
