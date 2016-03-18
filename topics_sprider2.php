@@ -98,6 +98,7 @@ function get_topic_queue($count = 10000){
 
 function crawl_topic($tid) {
 	global $http;
+	$dbh = get_dbh();
 
 	$url = 'https://www.zhihu.com/topic/'.$tid .'/top-answers';
 
