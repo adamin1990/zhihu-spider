@@ -73,6 +73,8 @@ function sprider_question() {
 
     $dbh->update('topic_index', array('index_question_uptime'=>$time), array('id' => $tid));
 
+    echo "topic: {$tid} start...\n";
+
     crawl_question($tid);
 }
 
