@@ -59,12 +59,19 @@ function sprider_topic() {
     $dbh = get_dbh();
 
     $tid = get_topic_queue();
-    $progress_id = posix_getpid();
 
+	// $sql = "Select `id`, `index_uptime` From `topic_index` WHERE  `id`=".$tid;
+ //    $result = $dbh->query($sql);
+ //    $rows = $dbh->fetch_all($result);
+
+ //    if($rows && $rows[0]['index_uptime'] !=0) {
+ //        return;
+ //    }
+
+    $progress_id = posix_getpid();
     $time = time();
 
     $dbh->update('topic_index', array('index_uptime'=>$time, 'index_progress_id'=>$progress_id), array('id' => $tid));
-
 
     crawl_topic($tid);
 }
@@ -98,17 +105,8 @@ function get_topic_queue($count = 10000){
 
 function crawl_topic($tid) {
     global $http;
-    $dbh = get_dbh();
-
+    
     $url = 'https://www.zhihu.com/topic/'.$tid .'/top-answers';
-
-    $sql = "Select `id`, `index_uptime` From `topic_index` WHERE  `id`=".$tid;
-    $result = $dbh->query($sql);
-    $rows = $dbh->fetch_all($result);
-
-    if($rows && $rows[0]['index_uptime'] !=0) {
-        return;
-    }
 
     $http->get($url, function($body, $headers, $http) {
         global $dom;
