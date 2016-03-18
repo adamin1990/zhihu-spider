@@ -145,7 +145,7 @@ function crawl_question ($tid, $page = 1) {
         foreach ($questions as $value) {
             save_question_index($value);
         }
-
+        $dom->clear();
         crawl_question($tid, $page + 1);
     });
 }
