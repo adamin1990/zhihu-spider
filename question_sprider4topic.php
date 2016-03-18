@@ -108,7 +108,7 @@ function get_question_queue($count = 10000) {
 function crawl_question ($tid, $page = 0) {
 	global $http;
     
-    $url = 'https://www.zhihu.com/topic/'.$tid .'/questions?page='$page;
+    $url = 'https://www.zhihu.com/topic/'.$tid .'/questions?page='.$page;
 
     $http->get($url, function($body, $headers, $http) use($tid, $page) {
         global $dom;
