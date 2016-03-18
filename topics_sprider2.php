@@ -101,6 +101,14 @@ function crawl_topic($tid) {
 
 	$url = 'https://www.zhihu.com/topic/'.$tid .'/top-answers';
 
+	$sql = "Select `id`, `index_uptime` From `topic_index` WHERE  `id`=".$tid;
+    $result = $dbh->query($sql);
+    $rows = $dbh->fetch_all($result);
+
+    if($rows['index_uptime'] !=0) {
+    	return;
+    }
+
 	$http->get($url, function($body, $headers, $http) {
         global $dom;
 
