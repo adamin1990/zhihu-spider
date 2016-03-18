@@ -130,7 +130,7 @@ function crawl_question ($tid) {
                     $qid = substr($href, strrpos($href, '/') + 1);
 
                     $questions[] = array(
-                        'id' => addslashes($tid)
+                        'id' => addslashes($qid)
                     );
                 }
         	}
