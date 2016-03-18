@@ -124,7 +124,7 @@ function crawl_question ($tid) {
 
         	if($questions_child) {
         		foreach ($questions_child as $question_dom) {
-                    $title_ret = $value->find('.question-item-title a', 0);
+                    $title_ret = $question_dom->find('.question-item-title a', 0);
                     $href = $title_ret->href;
 
                     $qid = substr($href, strrpos($href, '/') + 1);
