@@ -60,13 +60,13 @@ function sprider_question() {
 
     $tid = get_question_queue();
 
-	// $sql = "Select `id`, `index_uptime` From `topic_index` WHERE  `id`=".$tid;
- //    $result = $dbh->query($sql);
- //    $rows = $dbh->fetch_all($result);
+	$sql = "Select `id`, `index_question_uptime` From `topic_index` WHERE  `id`=".$tid;
+    $result = $dbh->query($sql);
+    $rows = $dbh->fetch_all($result);
 
- //    if($rows && $rows[0]['index_uptime'] !=0) {
- //        return;
- //    }
+    if($rows && $rows[0]['index_question_uptime'] !=0) {
+        return;
+    }
 
     $progress_id = posix_getpid();
     $time = time();
