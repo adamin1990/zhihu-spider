@@ -18,7 +18,7 @@ require_once 'Mysql.class.php';
 require_once 'simple_html_dom.php';
 require_once 'checkLogin.php';
 
-checkLogin();
+//checkLogin();
 
 $http = new Http('http://www.zhihu.com/', array(
 	'request_headers' => array(
