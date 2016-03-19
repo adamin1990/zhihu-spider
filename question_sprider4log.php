@@ -30,12 +30,7 @@ $dom = new simple_html_dom();
 
 $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36');
 
-crawl_question();
-
-
 $moniter_name = dirname(__file__).'/moniter';
-
-
 
 if(!file_exists($moniter_name)) {
 	file_put_contents($moniter_name, 1);
@@ -47,6 +42,7 @@ if(!file_exists($moniter_name)) {
 	}
 }
 
+crawl_question();
 
 
 function crawl_question () {
