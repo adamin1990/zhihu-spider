@@ -128,7 +128,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
         $start = trim($start[1]);
 
         $dom->clear();
-        crawl_question($start, $offset + 20, $_xsrf);
+        sprider_question($start, $offset + 20, $_xsrf);
 	});
 
 }
