@@ -119,27 +119,22 @@ function crawl_question ($tid, $page = 1) {
 
         $html = $dom->load($body);
 
-        $questions_list = $html->find('#zh-topic-questions-list', 0);
+        $questions_list = $html->find('#zh-topic-questions-list .question_link');
 
         if(!$questions_list || count($questions_list) == 0) {
             return;
         }
 
         if($questions_list) {
-        	$questions_child = $questions_list->children();
+            foreach ($questions_list as $question_dom) {
+                $href = $question_dom->href;
 
-        	if($questions_child) {
-        		foreach ($questions_child as $question_dom) {
-                    $title_ret = $question_dom->find('.question-item-title a', 0);
-                    $href = $title_ret->href;
+                $qid = substr($href, strrpos($href, '/') + 1);
 
-                    $qid = substr($href, strrpos($href, '/') + 1);
-
-                    $questions[] = array(
-                        'id' => addslashes($qid)
-                    );
-                }
-        	}
+                $questions[] = array(
+                    'id' => addslashes($qid)
+                );
+            }
         }
 
         foreach ($questions as $value) {
