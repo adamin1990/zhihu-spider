@@ -33,19 +33,20 @@ $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHT
 $moniter_name = dirname(__file__).'/moniter';
 
 if(!file_exists($moniter_name)) {
-	file_put_contents($moniter_name, 1);
+	file_put_contents($moniter_name, 0);
 } else {
 	$currentmodif = filemtime($moniter_name);
+	$offset = file_get_contents($moniter_name);
 
 	if((time() - $currentmodif) < 600) {
 		return;
 	}
 }
 
-crawl_question();
+crawl_question($offset);
 
 
-function crawl_question () {
+function crawl_question ($offset) {
 	global $http;
     
     $url = 'https://www.zhihu.com/log/questions';
@@ -87,7 +88,7 @@ function crawl_question () {
         $start = explode('-', $q_log_id);
         $start = trim($start[1]);
 
-        sprider_question($start, 20, $_xsrf);
+        sprider_question($start, $offset, $_xsrf);
     });
 }
 
@@ -104,7 +105,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 	);
 
 	print_r($data);
-	file_put_contents($moniter_name, 1);
+	file_put_contents($moniter_name, $offset);
 
 	$http->post($url, $data, function($body, $headers, $http) use($start, $offset, $_xsrf) {
 		global $dom;
