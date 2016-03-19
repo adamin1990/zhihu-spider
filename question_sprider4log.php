@@ -40,7 +40,7 @@ if(!file_exists($moniter_name)) {
 	$currentmodif = filemtime($moniter_name);
 	$offset = file_get_contents($moniter_name);
 
-	if((time() - $currentmodif) < 600) {
+	if((time() - $currentmodif) < 180) {
 		return;
 	}
 }
