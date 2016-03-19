@@ -22,7 +22,7 @@ $http = new Http('http://www.zhihu.com/', array('request_headers' => array('Cook
 
 $dom = new simple_html_dom();
 
-$lock_name = 'lock';
+$lock_name = dirname(__file__).'/lock';
 
 $time = time();
 
@@ -31,7 +31,7 @@ if(file_exists($lock_name)) {
 	$currentmodif = filemtime($lock_name);
 
 	if(($time - $currentmodif) > 600) {
-		if(file_exists('lock')){
+		if(file_exists($lock_name)){
 			unlink($lock_name);
 		}
 	} else {
@@ -41,7 +41,7 @@ if(file_exists($lock_name)) {
 
 //checkLogin();
 
-file_put_contents('lock', '1');
+file_put_contents($lock_name, '1');
 
 //配置
 // 入口种子用户
@@ -68,7 +68,7 @@ for ($i = 1; $i <= $process_count; $i++) {
 			exit($_pid);
 		}
 	} catch(Exception $e) {
-		if(file_exists('lock')){
+		if(file_exists($lock_name)){
 			unlink($lock_name);
 		}
 	}
@@ -78,7 +78,7 @@ while (pcntl_waitpid(0, $status) != -1) {
     $status = pcntl_wexitstatus($status);
     echo "Child $status completed\n";
 
-    if(file_exists('lock')){
+    if(file_exists($lock_name)){
 		unlink($lock_name);
 	}
 }
@@ -199,6 +199,7 @@ function get_user_info($url, $data, $offset = 0){
 
 	$http->post($url, $data, function($result) use (&$userInfo, &$userCount, $url, $data, $offset){
 		global $dom;
+		global $lock_name;
 
 		$json = json_decode($result, true);
 		$msg = $json['msg'];
@@ -209,7 +210,7 @@ function get_user_info($url, $data, $offset = 0){
 			return false;
 		}
 
-		file_put_contents('lock', '1');
+		file_put_contents($lock_name, '1');
 
 		foreach ($msg as $key => $value) {
 	        $html = $dom->load($value);
@@ -278,6 +279,6 @@ function get_dbh() {
 	return $instances[$key];
 }
 
-if(file_exists('lock')){
+if(file_exists($lock_name)){
 	unlink($lock_name);
 }
