@@ -33,6 +33,21 @@ $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHT
 crawl_question();
 
 
+$moniter_name = dirname(__file__).'/moniter';
+
+
+
+if(!file_exists($moniter_name)) {
+	file_put_contents($moniter_name, 1);
+} else {
+	$currentmodif = filemtime($moniter_name);
+
+	if((time() - $currentmodif) < 600) {
+		return;
+	}
+}
+
+
 
 function crawl_question () {
 	global $http;
@@ -82,6 +97,7 @@ function crawl_question () {
 
 function sprider_question($start, $offset = 0, $_xsrf) {
 	global $http;
+	global $moniter_name;
 
 	$url = 'https://www.zhihu.com/log/questions';
 
@@ -92,6 +108,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 	);
 
 	print_r($data);
+	file_put_contents($moniter_name, 1);
 
 	$http->post($url, $data, function($body, $headers, $http) use($start, $offset, $_xsrf) {
 		global $dom;
