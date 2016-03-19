@@ -32,9 +32,10 @@ $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHT
 
 $moniter_name = dirname(__file__).'/moniter';
 
+$offset = 0;
+
 if(!file_exists($moniter_name)) {
 	file_put_contents($moniter_name, 0);
-	crawl_question($offset);
 } else {
 	$currentmodif = filemtime($moniter_name);
 	$offset = file_get_contents($moniter_name);
@@ -42,9 +43,9 @@ if(!file_exists($moniter_name)) {
 	if((time() - $currentmodif) < 600) {
 		return;
 	}
-
-	crawl_question($offset);
 }
+
+crawl_question($offset);
 
 
 function crawl_question ($offset) {
