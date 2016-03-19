@@ -58,7 +58,7 @@ function checkLogin() {
 					$cookies_array[]= $value;
 				}
 
-				file_put_contents('login_cookie', join(';', $cookies_array));
+				file_put_contents(getCookieFile(), join(';', $cookies_array));
 			});
 		}
 	});
@@ -66,9 +66,15 @@ function checkLogin() {
 
 function getLoginCookie() {
 	$login_cookie = '';
-	if(file_exists('login_cookie')) {
-		$login_cookie = file_get_contents('login_cookie');
+	$cookie_file = getCookieFile();
+
+	if(file_exists($cookie_file)) {
+		$login_cookie = file_get_contents($cookie_file);
 	}
 
 	return $login_cookie;
+}
+
+function getCookieFile() {
+	return dirname(__file__).'/login_cookie';
 }
