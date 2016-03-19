@@ -42,8 +42,6 @@ function crawl_question () {
     $http->get($url, function($body, $headers, $http) {
     	global $dom;
 
-        $questions = array();
-
         $html = $dom->load($body);
 
         $questions_list = $html->find('#zh-global-logs-questions-wrap .zm-item');
@@ -65,10 +63,10 @@ function crawl_question () {
                 $time = $question_dom->find('.zm-item-meta time', 0);
                 $time = $time->getAttribute('datetime');
 
-                $questions[] = array(
-                    'id' => $qid,
-                    'time' => $time
-                );
+                $data = array(
+	            	'id' => $qid,
+	            	'time' => $time
+	            );
 
                 $q_log_id = $logitem_id;
                 save_question_index($data);
