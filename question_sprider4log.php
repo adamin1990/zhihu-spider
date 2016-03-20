@@ -32,28 +32,41 @@ $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHT
 
 $moniter_name = dirname(__file__).'/moniter';
 
+$start = 0;
 $offset = 0;
-
+$_xsrf = 0;
 if(!file_exists($moniter_name)) {
 	file_put_contents($moniter_name, 0);
 } else {
 	$currentmodif = filemtime($moniter_name);
-	$offset = file_get_contents($moniter_name);
+	$breakpoint = file_get_contents($moniter_name);
+    $breakpoint = explode('|', $breakpoint);
+
+    $start = $breakpoint[0];
+    $offset = $breakpoint[1];
+    $_xsrf = $breakpoint[2];
 
 	if((time() - $currentmodif) < 180) {
 		return;
 	}
 }
 
-crawl_question($offset);
+crawl_question($start, $offset, $_xsrf);
 
 
-function crawl_question ($offset) {
+function crawl_question ($start, $offset, $_xsrf) {
+    if($offset > 0) {
+        sprider_question($start, $offset, $_xsrf);
+
+        return;
+    }
+
+    // 第一次
 	global $http;
     
     $url = 'https://www.zhihu.com/log/questions';
 
-    $http->get($url, function($body, $headers, $http) {
+    $http->get($url, function($body, $headers, $http)  use($offset) {
     	global $dom;
 
         $html = $dom->load($body);
