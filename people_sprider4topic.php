@@ -143,6 +143,7 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
 		$people_list = $html->find('.zm-person-item');
 
 		$start_id = '';
+		$fail_count = 0;
 		foreach ($people_list as $people) {
             $start_id = $people->getAttribute('id');
             $title = $people->find('.zm-list-content-title a', 0);
@@ -156,7 +157,13 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
 	        	'nickname' => addslashes($nickname)
 	        );
 
-            save_people_index($data);
+            if(!save_people_index($data)) {
+            	$fail_count++;
+            }
+        }
+
+        if($fail_count == $qcount){
+        	return;
         }
 
         $start = explode('-', $start_id);
@@ -204,11 +211,14 @@ function save_people_index($data) {
 
     if(($dbh->num_results()) > 0){
 		echo "{$data['username']} fail...\n";
+
+		return false;
 	} else {
 		$data['ctime'] = time();
 		$dbh->insert('people_index', $data);
 
 		echo "{$data['username']} success...\n";
+		return true;
 	}
 }
 
