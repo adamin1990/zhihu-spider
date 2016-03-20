@@ -46,7 +46,7 @@ if(!file_exists($moniter_name)) {
     $offset = $breakpoint[1];
     $_xsrf = $breakpoint[2];
 
-	if((time() - $currentmodif) < 180) {
+	if((time() - $currentmodif) < 60) {
 		return;
 	}
 }
