@@ -122,7 +122,9 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 	print_r($data);
 	$breakpoint = join('|', $data);
 
-	file_put_contents($moniter_name, $breakpoint);
+    if($start) {
+        file_put_contents($moniter_name, $breakpoint);
+    }
 
 	$http->post($url, $data, function($body, $headers, $http) use($start, $offset, $_xsrf) {
 		global $dom;
