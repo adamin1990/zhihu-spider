@@ -137,13 +137,12 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
 
 		$msg = $json['msg'];
 
-		$qcount = $msg[0];
-
 		$html = $dom->load($msg[1]);
 		$people_list = $html->find('.zm-person-item');
 
 		$start_id = '';
 		$fail_count = 0;
+		$people_count = 0;
 		foreach ($people_list as $people) {
             $start_id = $people->getAttribute('id');
             $title = $people->find('.zm-list-content-title a', 0);
@@ -160,9 +159,10 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
             if(!save_people_index($data)) {
             	$fail_count++;
             }
+            $people_count++;
         }
 
-        if($fail_count == $qcount){
+        if($fail_count == $people_count){
         	return;
         }
 
