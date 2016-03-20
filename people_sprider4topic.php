@@ -76,6 +76,8 @@ function sprider_people() {
 }
 
 function crawl_people($tid, $offset) {
+	global $http;
+	
 	$url = 'https://www.zhihu.com/topic/'.$tid.'/followers';
 
 	$http->get($url, function($body, $headers, $http)  use($url, $offset) {
