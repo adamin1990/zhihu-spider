@@ -77,7 +77,7 @@ function sprider_people() {
 
 function crawl_people($tid, $offset) {
 	global $http;
-	
+
 	$url = 'https://www.zhihu.com/topic/'.$tid.'/followers';
 
 	$http->get($url, function($body, $headers, $http)  use($url, $offset) {
@@ -103,8 +103,8 @@ function crawl_people($tid, $offset) {
                 $nickname = $title->text();
 
                 $data = array(
-	            	'username' => $username,
-	            	'nickname' => $nickname
+	            	'username' => addslashes($username),
+	        		'nickname' => addslashes($nickname)
 	            );
 
                 save_people_index($data);
@@ -150,8 +150,8 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
             $nickname = $title->text();
 
             $data = array(
-	            'username' => $username,
-	            'nickname' => $nickname
+	            'username' => addslashes($username),
+	        	'nickname' => addslashes($nickname)
 	        );
 
             save_people_index($data);
@@ -197,7 +197,7 @@ function get_people_queue($count = 100) {
 
 function save_people_index($data) {
 	$dbh = get_dbh();
-    $sql = "SELECT * FROM `people_index` WHERE `username`=".$data['username'];
+    $sql = "SELECT * FROM `people_index` WHERE `username`='".$data['username']."'";
     $dbh->query($sql);
 
     if(($dbh->num_results()) > 0){
