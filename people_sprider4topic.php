@@ -94,9 +94,9 @@ function crawl_people($tid, $offset) {
 
         if($people_list) {
         	$start_id = '';
-            foreach ($questions_list as $question_dom) {
-                $start_id = $question_dom->getAttribute('id');
-                $title = $question_dom->find('.zm-list-content-title a', 0);
+            foreach ($people_list as $people) {
+                $start_id = $people->getAttribute('id');
+                $title = $people->find('.zm-list-content-title a', 0);
                 $href = $title->href;
 
                 $username = substr($href, strrpos($href, '/') + 1);
@@ -141,9 +141,9 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
 		$people_list = $html->find('.zm-person-item');
 
 		$start_id = '';
-		foreach ($questions_list as $question_dom) {
-            $start_id = $question_dom->getAttribute('id');
-            $title = $question_dom->find('.zm-list-content-title a', 0);
+		foreach ($people_list as $people) {
+            $start_id = $people->getAttribute('id');
+            $title = $people->find('.zm-list-content-title a', 0);
             $href = $title->href;
 
             $username = substr($href, strrpos($href, '/') + 1);
