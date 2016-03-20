@@ -31,6 +31,7 @@ $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHT
 
 $moniter_name = dirname(__file__).'/topic_moniter_people';
 
+worker(4);
 
 function worker ($process_count = 8) {
     // 开启8个进程
@@ -61,8 +62,6 @@ function worker ($process_count = 8) {
         echo "Child $status completed\n";
     }
 }
-
-sprider_people();
 
 function sprider_people() {
 	$dbh = get_dbh();
