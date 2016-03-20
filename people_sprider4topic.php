@@ -68,7 +68,7 @@ function sprider_people() {
     $tid = get_people_queue();
 
     $time = time();
-    $dbh->update('topic_index', array('index_question_uptime'=>$time), array('id' => $tid));
+    $dbh->update('topic_index', array('index_people_uptime'=>$time), array('id' => $tid));
     echo "topic: {$tid} start...\n";
 
     crawl_people($tid, 0);
