@@ -68,7 +68,6 @@ function sprider_people() {
 	$dbh = get_dbh();
     $tid = get_question_queue();
 
-
     $time = time();
     $dbh->update('topic_index', array('index_question_uptime'=>$time), array('id' => $tid));
     echo "topic: {$tid} start...\n";
