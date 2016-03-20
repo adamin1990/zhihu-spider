@@ -127,6 +127,7 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
 		'_xsrf' => $_xsrf
 	);
 
+	echo $url."\n";
 	print_r($data);
 
 	$http->post($url, $data, function($body, $headers, $http) use($url, $start, $offset, $_xsrf) {
