@@ -168,7 +168,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
         }
 
         if($fail_count == $question_count){
-            $repeat_num = ++;
+            $repeat_num++;
         } else {
             $repeat_num = 0;
         }
