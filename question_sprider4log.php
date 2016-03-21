@@ -107,6 +107,9 @@ function crawl_question ($start, $offset, $_xsrf) {
     });
 }
 
+
+$repeat_num = 0;
+
 function sprider_question($start, $offset = 0, $_xsrf) {
 	global $http;
 	global $moniter_name;
@@ -128,6 +131,8 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 
 	$http->post($url, $data, function($body, $headers, $http) use($start, $offset, $_xsrf) {
 		global $dom;
+        global $repeat_num;
+        global $moniter_name;
 
 		$json = json_decode($body, true);
 
@@ -138,9 +143,11 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 		$html = $dom->load($msg[1]);
 		$questions_list = $html->find('.zm-item');
 
-		$q_log_id = '';
+		$start_id = '';
+        $fail_count = 0;
+        $question_count = 0;
 		foreach ($questions_list as $question_dom) {
-            $logitem_id = $question_dom->getAttribute('id');
+            $start_id = $question_dom->getAttribute('id');
             $title = $question_dom->find('.zm-item-title a', 0);
             $href = $title->href;
 
@@ -153,11 +160,23 @@ function sprider_question($start, $offset = 0, $_xsrf) {
             	'id' => $qid,
             	'time' => $time
             );
-            $q_log_id = $logitem_id;
-            save_question_index($data);
+
+            if(!save_question_index($data)) {
+                $fail_count++;
+            }
+            $question_count++;
         }
 
-        $start = explode('-', $q_log_id);
+        if($fail_count == $question_count){
+            $repeat_num ++;
+        }
+
+        if($repeat_num > 50) {
+            unlink($moniter_name);
+            return;
+        }
+
+        $start = explode('-', $start_id);
         $start = trim($start[1]);
 
         $dom->clear();
@@ -179,11 +198,15 @@ function save_question_index($data) {
 
     if(($dbh->num_results()) > 0){
 		echo "{$data['id']} - {$date} fail...\n";
+
+        return false;
 	} else {
 		$data['ctime'] = time();
 		$dbh->insert('question_index', $data);
 
 		echo "{$data['id']} - {$date} success...\n";
+
+        return true;
 	}
 }
 
