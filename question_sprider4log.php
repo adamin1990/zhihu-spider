@@ -173,6 +173,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
             $repeat_num = 0;
         }
 
+        // 连续50次 抓不到 就退出程序
         if($repeat_num > 50) {
             unlink($moniter_name);
             return;
