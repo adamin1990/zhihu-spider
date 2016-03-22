@@ -31,6 +31,16 @@ $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHT
 
 $moniter_name = dirname(__file__).'/topic_moniter_people';
 
+if(!file_exists($moniter_name)) {
+    file_put_contents($moniter_name, 0);
+} else {
+    $currentmodif = filemtime($moniter_name);
+
+    if((time() - $currentmodif) < 60) {
+        return;
+    }
+}
+
 worker(4);
 
 function worker ($process_count = 8) {
@@ -129,6 +139,8 @@ function sprider_people2($url, $start, $offset, $_xsrf) {
 
 	echo $url."\n";
 	print_r($data);
+
+    file_put_contents($moniter_name, 1);
 
 	$http->post($url, $data, function($body, $headers, $http) use($url, $start, $offset, $_xsrf) {
 		global $dom;
