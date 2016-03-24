@@ -42,9 +42,9 @@ if(!file_exists($moniter_name)) {
 	$breakpoint = file_get_contents($moniter_name);
     $breakpoint = explode('|', $breakpoint);
 
-    $start = $breakpoint[0];
-    $offset = $breakpoint[1];
-    $_xsrf = $breakpoint[2];
+    // $start = $breakpoint[0];
+    // $offset = $breakpoint[1];
+    // $_xsrf = $breakpoint[2];
 
 	if((time() - $currentmodif) < 60) {
 		return;
