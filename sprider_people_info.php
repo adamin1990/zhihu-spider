@@ -28,7 +28,7 @@ $dom = new simple_html_dom();
 
 $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36');
 
-worker();
+//worker();
 
 function worker ($process_count = 8) {
     // 开启8个进程
@@ -72,7 +72,7 @@ function sprider_people() {
 }
 //crawl_people('kaifulee');
 
-//crawl_people('kaifulee');
+crawl_people('yu-ling-nuo');
 function crawl_people($username) {
 	global $http;
 
@@ -284,19 +284,23 @@ function crawl_people($username) {
         	$_companys = array();
         	foreach ($companys as $company) {
         		$_inf = array();
-        		$tmp = $company->find('.ProfileItem-text a');
+        		$tmp = $company->find('.ProfileItem-text', 0)->children();
 
-                $tmp || $tmp = $company->find('.ProfileItem-text span[class!=Dot]');
+                $i = 0;
+                foreach ($tmp as $key => $value) {
+                    $value = trim($value->text());
+                    if($value == '.') {
+                        continue;
+                    }
 
-        		if($tmp[0]) {
-        			$employment = $tmp[0]->text();
-        			$_inf['employment'] = $employment;
-        		}
-        		
-        		if($tmp[1]) {
-        			$position = $tmp[1]->text();
-        			$_inf['position'] = $position;
-        		}
+                    if($i == 0) {
+                        $_inf['employment'] = $value;
+                    } else {
+                        $_inf['position'] = $value;
+                    }
+
+                    $i++;
+                }
 
         		$_companys[] = $_inf;
         	}
@@ -311,13 +315,23 @@ function crawl_people($username) {
             $_residences = array();
             foreach ($residences as $residence) {
                 $_inf = array();
-                $tmp = $residence->find('.ProfileItem-text a');
-                $tmp || $tmp = $company->find('.ProfileItem-text span[class!=Dot]');
-                if($tmp[0]) {
-                    $cityname = $tmp[0]->text();
-                    $_inf['cityname'] = $cityname;
+                $tmp = $company->find('.ProfileItem-text', 0)->children();
+
+                $i = 0;
+                foreach ($tmp as $key => $value) {
+                    $value = trim($value->text());
+                    if($value == '.') {
+                        continue;
+                    }
+
+                    if($i == 0) {
+                        $_inf['cityname'] = $value;
+                    } else {
+                        
+                    }
+
+                    $i++;
                 }
-                
 
                 $_residences[] = $_inf;
             }
@@ -332,26 +346,33 @@ function crawl_people($username) {
             $_educations = array();
             foreach ($educations as $residence) {
                 $_inf = array();
-                $tmp = $residence->find('.ProfileItem-text a');
-                $tmp || $tmp = $company->find('.ProfileItem-text span[class!=Dot]');
-                if($tmp[0]) {
-                    $university = $tmp[0]->text();
-                    $_inf['university'] = $university;
-                }
+                $tmp = $company->find('.ProfileItem-text', 0)->children();
 
-                if($tmp[1]) {
-                    $major = $tmp[1]->text();
-                    $_inf['major'] = $major;
+                $i = 0;
+                foreach ($tmp as $key => $value) {
+                    $value = trim($value->text());
+                    var_dump($value);
+                    
+                    if($value == '.') {
+                        continue;
+                    }
+
+                    if($i == 0) {
+                        $_inf['university'] = $value;
+                    } else {
+                        $_inf['major'] = $value;
+                    }
+
+                    $i++;
                 }
-                
 
                 $_educations[] = $_inf;
             }
 
             $data['educations'] = json_encode($_educations);
         }
-
-        save_people_info($data);
+print_r($data);
+        //save_people_info($data);
     });
 }
 
