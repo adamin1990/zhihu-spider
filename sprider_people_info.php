@@ -92,15 +92,15 @@ function crawl_people($username) {
         	$data['weibo'] = addslashes($weibo);
         }
 
-        $location = $profile_header->find('.location .topic-link', 0);
+        $location = $profile_header->find('.location', 0);
         if($location) {
-        	$location = $location->text();
+        	$location = $location->title;
         	$data['location'] = addslashes($location);
         }
 
-        $business = $profile_header->find('.business .topic-link', 0);
+        $business = $profile_header->find('.business', 0);
         if($business) {
-        	$business = $business->text();
+        	$business = $business->title;
         	$data['business'] = addslashes($business);
         }
 
@@ -114,27 +114,27 @@ function crawl_people($username) {
         	$data['gender'] = addslashes('o');
         }
 
-        $employment = $profile_header->find('.employment .topic-link', 0);
+        $employment = $profile_header->find('.employment', 0);
         if($employment) {
-        	$employment = $employment->text();
+        	$employment = $employment->title;
         	$data['employment'] = addslashes($employment);
         }
 
-        $position = $profile_header->find('.position .topic-link', 0);
+        $position = $profile_header->find('.position', 0);
         if($position) {
-        	$position = $position->text();
+        	$position = $position->title;
         	$data['position'] = addslashes($position);
         }
 
-        $university = $profile_header->find('.education .topic-link', 0);
+        $university = $profile_header->find('.education', 0);
         if($university) {
-        	$university = $university->text();
+        	$university = $university->title;
         	$data['education'] = addslashes($university);
         }
 
-        $major = $profile_header->find('.education-extra .topic-link', 0);
+        $major = $profile_header->find('.education-extra', 0);
         if($major) {
-        	$major = $major->text();
+        	$major = $major->title;
         	$data['education'] = addslashes($major);
         }
 
@@ -264,6 +264,16 @@ function crawl_people($username) {
         	$shares = $shares->text();
         	$data['shares'] = addslashes($shares);
         }
+
+        $marks = $html->find('.zm-profile-header-marked .zg-link-litblue-normal', 0);
+        if($marks) {
+            $marks = $marks->text();
+            $marks = explode(' ', $marks);
+
+            $marks = $marks[0];
+            $data['marks'] = addslashes($marks);
+        }
+
 
         $profile_details = $html->find('.zm-profile-details .zm-profile-module');
 
