@@ -82,6 +82,7 @@ function crawl_people($username) {
     	global $dom;
         $html = $dom->load($body);
         $data = array();
+        $data['username'] = $username;
 
         $profile_header = $html->find('.zm-profile-header-main', 0);
 
