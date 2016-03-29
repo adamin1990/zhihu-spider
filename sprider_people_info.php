@@ -383,14 +383,14 @@ function get_people_queue($count = 10000) {
 
     $redis_key = 'zhihu_people2info_queue';
 
-    if(file_exists($redis_key)) {
-        return $redis->lpop($redis_key);
-    } else {
-        file_put_contents($redis_key, '1');
-    }
-
     // 如果队列为空, 从数据库取一些
     if (!$redis->lsize($redis_key)) {
+        if(file_exists($redis_key)) {
+            return $redis->lpop($redis_key);
+        } else {
+            file_put_contents($redis_key, '1');
+        }
+        
         //$sql = "Select `id`, `index_uptime` From `topic_index` Order By `index_uptime` Asc Limit {$count}";
         $sql = "Select `username` From `people_index` WHERE  `info_uptime`=0  Limit {$count}";
         $result = $dbh->query($sql);
