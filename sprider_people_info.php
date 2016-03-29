@@ -28,7 +28,7 @@ $dom = new simple_html_dom();
 
 $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36');
 
-worker();
+worker(4);
 
 function worker ($process_count = 8) {
     // 开启8个进程
