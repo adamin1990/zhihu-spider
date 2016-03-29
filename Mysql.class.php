@@ -425,7 +425,7 @@ class Mysql{
 	private function error($msg, $exit = true){
 		file_put_contents('sql_error', $msg);
 		//TODO 使用MVC中Router类中的error方法~~
-		R::getInstance()->error($msg, $exit);
+		//R::getInstance()->error($msg, $exit);
 	}
 	
 	private function dbIN($ids){

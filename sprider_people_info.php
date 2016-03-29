@@ -129,13 +129,13 @@ function crawl_people($username) {
         $university = $profile_header->find('.education', 0);
         if($university) {
         	$university = $university->title;
-        	$data['education'] = addslashes($university);
+        	$data['university'] = addslashes($university);
         }
 
         $major = $profile_header->find('.education-extra', 0);
         if($major) {
         	$major = $major->title;
-        	$data['education'] = addslashes($major);
+        	$data['major'] = addslashes($major);
         }
 
         $nickname = $profile_header->find('.name', 0);
