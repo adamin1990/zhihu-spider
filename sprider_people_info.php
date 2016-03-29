@@ -275,6 +275,9 @@ function crawl_people($username) {
         	foreach ($companys as $company) {
         		$_inf = array();
         		$tmp = $company->find('.ProfileItem-text a');
+
+                $tmp || $tmp = $company->find('.ProfileItem-text span');
+
         		if($tmp[0]) {
         			$employment = $tmp[0]->text();
         			$_inf['employment'] = $employment;
@@ -299,6 +302,7 @@ function crawl_people($username) {
             foreach ($residences as $residence) {
                 $_inf = array();
                 $tmp = $residence->find('.ProfileItem-text a');
+                $tmp || $tmp = $company->find('.ProfileItem-text span');
                 if($tmp[0]) {
                     $cityname = $tmp[0]->text();
                     $_inf['cityname'] = $cityname;
@@ -319,6 +323,7 @@ function crawl_people($username) {
             foreach ($educations as $residence) {
                 $_inf = array();
                 $tmp = $residence->find('.ProfileItem-text a');
+                $tmp || $tmp = $company->find('.ProfileItem-text span');
                 if($tmp[0]) {
                     $university = $tmp[0]->text();
                     $_inf['university'] = $university;
