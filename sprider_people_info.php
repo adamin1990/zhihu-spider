@@ -28,7 +28,7 @@ $dom = new simple_html_dom();
 
 $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36');
 
-//worker();
+worker();
 
 function worker ($process_count = 8) {
     // 开启8个进程
@@ -72,7 +72,7 @@ function sprider_people() {
 }
 //crawl_people('kaifulee');
 
-crawl_people('yu-ling-nuo');
+//crawl_people('yu-ling-nuo');
 function crawl_people($username) {
 	global $http;
 
@@ -305,7 +305,7 @@ function crawl_people($username) {
         		$_companys[] = $_inf;
         	}
 
-        	$data['companys'] = json_encode($_companys);
+        	$data['companys'] = encode_json($_companys);
         }
 
         // 居住信息
@@ -315,7 +315,7 @@ function crawl_people($username) {
             $_residences = array();
             foreach ($residences as $residence) {
                 $_inf = array();
-                $tmp = $company->find('.ProfileItem-text', 0)->children();
+                $tmp = $residence->find('.ProfileItem-text', 0)->children();
 
                 $i = 0;
                 foreach ($tmp as $key => $value) {
@@ -336,7 +336,7 @@ function crawl_people($username) {
                 $_residences[] = $_inf;
             }
 
-            $data['residences'] = json_encode($_residences);
+            $data['residences'] = encode_json($_residences);
         }
 
         // 教育经历
@@ -344,15 +344,13 @@ function crawl_people($username) {
         $educations = $educations->find('.zm-profile-details-items .ProfileItem');
         if($educations) {
             $_educations = array();
-            foreach ($educations as $residence) {
+            foreach ($educations as $education) {
                 $_inf = array();
-                $tmp = $company->find('.ProfileItem-text', 0)->children();
+                $tmp = $education->find('.ProfileItem-text', 0)->children();
 
                 $i = 0;
                 foreach ($tmp as $key => $value) {
                     $value = trim($value->text());
-                    var_dump($value);
-                    
                     if($value == '.') {
                         continue;
                     }
@@ -369,10 +367,9 @@ function crawl_people($username) {
                 $_educations[] = $_inf;
             }
 
-            $data['educations'] = json_encode($_educations);
+            $data['educations'] = encode_json($_educations);
         }
-print_r($data);
-        //save_people_info($data);
+        save_people_info($data);
     });
 }
 
@@ -441,4 +438,20 @@ function get_redis() {
         $instances[$key]->connect('127.0.0.1', '6379');
     }
     return $instances[$key];
+}
+
+function encode_json($str) {
+    return urldecode(json_encode(url_encode($str)));
+}
+
+function url_encode($str) {
+    if(is_array($str)) {
+        foreach($str as $key=>$value) {
+            $str[urlencode($key)] = url_encode($value);
+        }
+    } else {
+        $str = urlencode($str);
+    }
+
+    return $str;
 }
