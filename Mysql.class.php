@@ -171,8 +171,8 @@ class Mysql{
 	 * @return int
 	 */
 	public function insert($table, $data) {
-		$sql = "INSERT INTO ".$table." ( ";
-		$sql.= implode(',', array_keys($data)).' ) VALUES ( ';
+		$sql = "INSERT INTO `".$table."` ( `";
+		$sql.= implode('`,`', array_keys($data)).'` ) VALUES ( ';
 		$sql.= "'".implode("','",$data)."' ) ";
 		
 		$this->query($sql);
@@ -210,7 +210,7 @@ class Mysql{
 		}
 			
 		foreach($data as $k=>$v){
-			$datas[] = $k." = '$v'";
+			$datas[] = '`'.$k."` = '$v'";
 		}
 		
 		$sql = "UPDATE ". $table ." SET ";
@@ -423,10 +423,9 @@ class Mysql{
 	}
 	
 	private function error($msg, $exit = true){
-		file_put_contents('test', $msg);
-		exit();
+		file_put_contents('sql_error', $msg);
 		//TODO 使用MVC中Router类中的error方法~~
-		//R::getInstance()->error($msg, $exit);
+		R::getInstance()->error($msg, $exit);
 	}
 	
 	private function dbIN($ids){
