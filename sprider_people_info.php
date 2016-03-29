@@ -90,6 +90,10 @@ function crawl_people($username) {
 
         $profile_header = $html->find('.zm-profile-header-main', 0);
 
+        if(!$profile_header) {
+            return;
+        }
+
         $weibo = $profile_header->find('.zm-profile-header-user-weibo', 0);
         if($weibo) {
         	$weibo = $weibo->href;
