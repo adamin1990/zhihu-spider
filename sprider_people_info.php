@@ -335,7 +335,7 @@ function crawl_people($username) {
             $data['educations'] = json_encode($_educations);
         }
 
-        print_r($data);
+        save_people_info($data);
     });
 }
 
