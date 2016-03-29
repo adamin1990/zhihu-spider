@@ -290,6 +290,51 @@ function crawl_people($username) {
         	$data['companys'] = json_encode($_companys);
         }
 
+        // 居住信息
+        $residences = $profile_details[2];
+        $residences = $residences->find('.zm-profile-details-items .ProfileItem');
+        if($residences) {
+            $_residences = array();
+            foreach ($residences as $residence) {
+                $_inf = array();
+                $tmp = $residence->find('.ProfileItem-text a');
+                if($tmp[0]) {
+                    $cityname = $tmp[0]->text();
+                    $_inf['cityname'] = $cityname;
+                }
+                
+
+                $_residences[] = $_inf;
+            }
+
+            $data['residences'] = json_encode($_residences);
+        }
+
+        // 教育经历
+        $educations = $profile_details[3];
+        $educations = $educations->find('.zm-profile-details-items .ProfileItem');
+        if($educations) {
+            $_educations = array();
+            foreach ($educations as $residence) {
+                $_inf = array();
+                $tmp = $residence->find('.ProfileItem-text a');
+                if($tmp[0]) {
+                    $university = $tmp[0]->text();
+                    $_inf['university'] = $university;
+                }
+
+                if($tmp[1]) {
+                    $major = $tmp[1]->text();
+                    $_inf['major'] = $major;
+                }
+                
+
+                $_educations[] = $_inf;
+            }
+
+            $data['educations'] = json_encode($_educations);
+        }
+
         print_r($data);
     });
 }
