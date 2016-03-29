@@ -64,6 +64,10 @@ function sprider_people() {
 	$dbh = get_dbh();
     $username = get_people_queue();
 
+    if(!$username) {
+        return;
+    }
+
     $time = time();
     $dbh->update('people_index', array('info_uptime'=>$time), array('username' => $username));
     echo "sprider: {$username} start...\n";
@@ -379,6 +383,12 @@ function get_people_queue($count = 10000) {
 
     $redis_key = 'zhihu_people2info_queue';
 
+    if(file_exists($redis_key)) {
+        return $redis->lpop($redis_key);
+    } else {
+        file_put_contents($redis_key, '1');
+    }
+
     // 如果队列为空, 从数据库取一些
     if (!$redis->lsize($redis_key)) {
         //$sql = "Select `id`, `index_uptime` From `topic_index` Order By `index_uptime` Asc Limit {$count}";
@@ -394,6 +404,10 @@ function get_people_queue($count = 10000) {
 
         foreach ($rows as $row) {
             $redis->lpush($redis_key, $row['username']);
+        }
+
+        if(file_exists($redis_key)) {
+            unlink($redis_key);
         }
     }
     // 从队列中取出一条数据
