@@ -28,19 +28,7 @@ $dom = new simple_html_dom();
 
 $http->setUseragent('Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36');
 
-$moniter_name = dirname(__file__).'/topic_moniter_people';
-
-if(!file_exists($moniter_name)) {
-    file_put_contents($moniter_name, 0);
-} else {
-    $currentmodif = filemtime($moniter_name);
-
-    if((time() - $currentmodif) < 60) {
-        return;
-    }
-}
-
-worker(1);
+//worker();
 
 function worker ($process_count = 8) {
     // 开启8个进程
@@ -82,22 +70,227 @@ function sprider_people() {
 
     crawl_people($username);
 }
+//crawl_people('kaifulee');
 
+crawl_people('sobird');
 function crawl_people($username) {
 	global $http;
 
 	$url = 'https://www.zhihu.com/people/'.$username.'/about';
 
-	$http->get($url, function($body, $headers, $http) {
+	$http->get($url, function($body, $headers, $http) use($username) {
     	global $dom;
         $html = $dom->load($body);
+        $data = array();
 
         $profile_header = $html->find('.zm-profile-header-main', 0);
 
         $weibo = $profile_header->find('.zm-profile-header-user-weibo', 0);
-        echo $weibo = $weibo->href;
+        if($weibo) {
+        	$weibo = $weibo->href;
+        	$data['weibo'] = addslashes($weibo);
+        }
 
-        die();
+        $location = $profile_header->find('.location .topic-link', 0);
+        if($location) {
+        	$location = $location->text();
+        	$data['location'] = addslashes($location);
+        }
+
+        $business = $profile_header->find('.business .topic-link', 0);
+        if($business) {
+        	$business = $business->text();
+        	$data['business'] = addslashes($business);
+        }
+
+        $gender_male = $profile_header->find('.gender .icon-profile-male', 0);
+        $gender_female = $profile_header->find('.gender .icon-profile-female', 0);
+        if($gender_male) {
+        	$data['gender'] = addslashes('m');
+        } else if($gender_female) {
+        	$data['gender'] = addslashes('f');
+        } else {
+        	$data['gender'] = addslashes('o');
+        }
+
+        $employment = $profile_header->find('.employment .topic-link', 0);
+        if($employment) {
+        	$employment = $employment->text();
+        	$data['employment'] = addslashes($employment);
+        }
+
+        $position = $profile_header->find('.position .topic-link', 0);
+        if($position) {
+        	$position = $position->text();
+        	$data['position'] = addslashes($position);
+        }
+
+        $university = $profile_header->find('.education .topic-link', 0);
+        if($university) {
+        	$university = $university->text();
+        	$data['education'] = addslashes($university);
+        }
+
+        $major = $profile_header->find('.education-extra .topic-link', 0);
+        if($major) {
+        	$major = $major->text();
+        	$data['education'] = addslashes($major);
+        }
+
+        $nickname = $profile_header->find('.name', 0);
+        if($nickname) {
+        	$nickname = $nickname->text();
+        	$data['nickname'] = addslashes($nickname);
+        }
+
+        $headline = $profile_header->find('.bio', 0);
+        if($headline) {
+        	$headline = $headline->text();
+        	$data['headline'] = addslashes($headline);
+        }
+
+        $profile = $profile_header->find('.description .content', 0);
+        if($profile) {
+        	$profile = $profile->text();
+        	$data['profile'] = addslashes($profile);
+        }
+
+        $following = $html->find('.zm-profile-side-following', 0);
+        $followees = $following->children(0);
+        $followers = $following->children(1);
+        $followees = $followees->find('strong', 0);
+        $followers = $followers->find('strong', 0);
+
+        if($followees) {
+        	$followees = $followees->text();
+        	$data['followees'] = addslashes($followees);
+        }
+
+        if($followers) {
+        	$followers = $followers->text();
+        	$data['followers'] = addslashes($followers);
+        }
+
+        // 关注的 专栏数
+        $columns = $html->find('.zm-profile-side-section-title .zg-link-litblue strong', 0);
+        if($columns) {
+        	$columns = $columns->text();
+        	$columns = explode(' ', $columns);
+        	$columns = $columns[0];
+        	$data['columns'] = addslashes($columns);
+        }
+
+        // 关注的 话题数
+        $topics = $html->find('.zm-profile-side-section-title .zg-link-litblue strong', 1);
+        if($topics) {
+        	$topics = $topics->text();
+        	$topics = explode(' ', $topics);
+        	$topics = $topics[0];
+        	$data['topics'] = addslashes($topics);
+        }
+
+        // 个人主页 浏览数
+        $visits = $html->find('.zm-profile-side-section .zg-gray-normal strong', 0);
+        if($visits) {
+        	$visits = $visits->text();
+        	$data['visits'] = addslashes($visits);
+        }
+
+        // 获得的 赞同数
+        $agrees = $html->find('.zm-profile-header-user-agree strong', 0);
+        if($agrees) {
+        	$agrees = $agrees->text();
+        	$data['agrees'] = addslashes($agrees);
+        }
+
+        // 获得的 感谢数
+        $thanks = $html->find('.zm-profile-header-user-thanks strong', 0);
+        if($thanks) {
+        	$thanks = $thanks->text();
+        	$data['thanks'] = addslashes($thanks);
+        }
+
+        
+        $profile_navbar = $html->find('.profile-navbar .item .num');
+
+        // 提问数
+        $asks = $profile_navbar[0];
+        if($asks) {
+        	$asks = $asks->text();
+        	$data['asks'] = addslashes($asks);
+        }
+
+        // 回答数
+        $answers = $profile_navbar[1];
+        if($answers) {
+        	$answers = $answers->text();
+        	$data['answers'] = addslashes($answers);
+        }
+
+        // 文章数
+        $posts = $profile_navbar[2];
+        if($posts) {
+        	$posts = $posts->text();
+        	$data['posts'] = addslashes($posts);
+        }
+
+        // 收藏数
+        $collections = $profile_navbar[3];
+        if($collections) {
+        	$collections = $collections->text();
+        	$data['collections'] = addslashes($collections);
+        }
+
+        // 公共编辑数
+        $logs = $profile_navbar[4];
+        if($logs) {
+        	$logs = $logs->text();
+        	$data['logs'] = addslashes($logs);
+        }
+
+        $details_reputation = $html->find('.zm-profile-details-reputation .zm-profile-module-desc span strong');
+
+        // 被收藏数
+        $favorites = $details_reputation[2];
+        if($favorites) {
+        	$favorites = $favorites->text();
+        	$data['favorites'] = addslashes($favorites);
+        }
+
+        // 被分享数
+        $shares = $details_reputation[3];
+        if($shares) {
+        	$shares = $shares->text();
+        	$data['shares'] = addslashes($shares);
+        }
+
+        $profile_details = $html->find('.zm-profile-details .zm-profile-module');
+
+        // 职业经历
+        $companys = $profile_details[1];
+        $companys = $companys->find('.zm-profile-details-items .ProfileItem');
+        if($companys) {
+        	$_companys = array();
+        	foreach ($companys as $company) {
+        		$_inf = array();
+        		$tmp = $company->find('.ProfileItem-text a');
+        		if($tmp[0]) {
+        			$employment = $tmp[0]->text();
+        			$_inf['employment'] = $employment;
+        		}
+        		
+        		if($tmp[1]) {
+        			$position = $tmp[1]->text();
+        			$_inf['position'] = $position;
+        		}
+
+        		$_companys[] = $_inf;
+        	}
+
+        	$data['companys'] = json_encode($_companys);
+        }
+
+        print_r($data);
     });
 }
 
