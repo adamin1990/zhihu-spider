@@ -72,7 +72,7 @@ function sprider_people() {
 }
 //crawl_people('kaifulee');
 
-crawl_people('sobird');
+crawl_people('kaifulee');
 function crawl_people($username) {
 	global $http;
 
