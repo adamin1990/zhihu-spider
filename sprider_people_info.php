@@ -96,7 +96,7 @@ function crawl_people($username) {
 
         $avatar = $profile_header->find('.Avatar', 0);
         if($avatar) {
-            $avatar = $weibo->src;
+            $avatar = $avatar->src;
             $avatar = substr($avatar, strrpos($avatar, '/') + 1);
             $avatar = explode('_', $avatar);
             $avatar = $avatar[0];
