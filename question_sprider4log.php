@@ -92,7 +92,8 @@ function crawl_question ($start, $offset, $_xsrf) {
 
                 $data = array(
 	            	'id' => $qid,
-	            	'time' => $time
+	            	'ctime' => strtotime($time),
+                    'date' => $time
 	            );
 
                 $q_log_id = $logitem_id;
@@ -158,7 +159,8 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 
             $data = array(
             	'id' => $qid,
-            	'cdatetime' => $time
+            	'ctime' => strtotime($time),
+                'date' => $time
             );
 
             if(!save_question_index($data)) {
@@ -189,10 +191,11 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 }
 
 function save_question_index($data) {
-	$date = $data['cdatetime'];
+	$date = $data['date'];
 
 	$data = array(
-		'id' => $data['id']
+		'id' => $data['id'],
+        'ctime' => $data['ctime']
 	);
 
 	$dbh = get_dbh();
@@ -204,7 +207,7 @@ function save_question_index($data) {
 
         return false;
 	} else {
-		$data['ctime'] = time();
+		
 		$dbh->insert('question_index', $data);
 
 		echo "{$data['id']} - {$date} success...\n";
