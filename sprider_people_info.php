@@ -94,6 +94,15 @@ function crawl_people($username) {
             return;
         }
 
+        $avatar = $profile_header->find('.Avatar', 0);
+        if($avatar) {
+            $avatar = $weibo->src;
+            $avatar = substr($avatar, strrpos($avatar, '/') + 1);
+            $avatar = explode('_', $avatar);
+            $avatar = $avatar[0];
+            $data['avatar'] = addslashes($avatar);
+        }
+
         $weibo = $profile_header->find('.zm-profile-header-user-weibo', 0);
         if($weibo) {
         	$weibo = $weibo->href;
