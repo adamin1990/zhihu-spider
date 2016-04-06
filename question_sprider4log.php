@@ -158,7 +158,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 
             $data = array(
             	'id' => $qid,
-            	'time' => $time
+            	'cdatetime' => $time
             );
 
             if(!save_question_index($data)) {
@@ -189,7 +189,7 @@ function sprider_question($start, $offset = 0, $_xsrf) {
 }
 
 function save_question_index($data) {
-	$date = $data['time'];
+	$date = $data['cdatetime'];
 
 	$data = array(
 		'id' => $data['id']
