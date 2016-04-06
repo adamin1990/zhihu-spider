@@ -68,8 +68,6 @@ function sprider_people() {
         return;
     }
 
-    $time = time();
-    $dbh->update('people_index', array('info_uptime'=>$time), array('username' => $username));
     echo "sprider: {$username} start...\n";
 
     crawl_people($username);
@@ -441,6 +439,9 @@ function save_people_info($data) {
 		$dbh->insert('people', $data);
 
 		echo "{$data['username']} success...\n";
+
+        $time = time();
+        $dbh->update('people_index', array('info_uptime'=>$time), array('username' => $data['username']));
 		return true;
 	}
 }
