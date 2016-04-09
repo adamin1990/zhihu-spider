@@ -29,6 +29,10 @@ function checkLogin() {
 
 		$set_cookie = $response_headers['set_cookie'];
 
+		if(!is_array($set_cookie)) {
+			$set_cookie = array($set_cookie);
+		}
+
 		$cookies = array();
 		foreach ($set_cookie as  $cookie) {
 			$cookie = explode(';', $cookie);
