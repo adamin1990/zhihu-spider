@@ -205,6 +205,9 @@ function save_question_index($data) {
 
 	$data = array(
 		'id' => $data['id'],
+        'title' => $data['title'],
+        'username' => $data['username'],
+        'nickname' => $data['nickname'],
         'ctime' => $data['ctime']
 	);
 
