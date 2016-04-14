@@ -85,16 +85,26 @@ function crawl_question ($start, $offset, $_xsrf) {
                 $title = $question_dom->find('.zm-item-title a', 0);
                 $href = $title->href;
 
+                $title = $title->text();
+
                 $qid = substr($href, strrpos($href, '/') + 1);
+
+                $user = $question_dom->find('div a', 0);
+                $username = $user->href;
+                $username = substr($username, strrpos($username, '/') + 1);
+                $nickname = $user->text();
 
                 $time = $question_dom->find('.zm-item-meta time', 0);
                 $time = $time->getAttribute('datetime');
 
                 $data = array(
-	            	'id' => $qid,
-	            	'ctime' => strtotime($time),
+                    'id' => $qid,
+                    'title' => $title,
+                    'username' => $username,
+                    'nickname' => $nickname,
+                    'ctime' => strtotime($time),
                     'date' => $time
-	            );
+                );
 
                 $q_log_id = $logitem_id;
                 save_question_index($data);
